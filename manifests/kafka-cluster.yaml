@@ -1,5 +1,5 @@
 # Kafka cluster CR for local development (Strimzi)
-# Single-node KRaft cluster, no TLS, persistent storage
+# Single-node KRaft cluster, no TLS, ephemeral storage
 
 apiVersion: kafka.strimzi.io/v1
 kind: KafkaNodePool
@@ -14,8 +14,7 @@ spec:
     - controller
     - broker
   storage:
-    type: persistent-claim
-    size: 1Gi
+    type: ephemeral
   resources:
     requests:
       memory: 256Mi

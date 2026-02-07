@@ -1,0 +1,38 @@
+apiVersion: skaffold/v4beta12
+kind: Config
+metadata:
+  name: mathtrail-infra
+
+manifests:
+  rawYaml:
+    - manifests/kafka-cluster.yaml
+
+deploy:
+  kubectl:
+    defaultNamespace: mathtrail
+  helm:
+    releases:
+      - name: postgres
+        repo: https://RyazanovAlexander.github.io/mathtrail-charts/charts
+        remoteChart: postgresql
+        namespace: mathtrail
+        createNamespace: true
+        valuesFiles:
+          - values/postgresql-values.yaml
+        wait: false
+
+      - name: redis
+        repo: https://RyazanovAlexander.github.io/mathtrail-charts/charts
+        remoteChart: redis
+        namespace: mathtrail
+        valuesFiles:
+          - values/redis-values.yaml
+        wait: false
+
+      - name: strimzi
+        repo: https://strimzi.io/charts/
+        remoteChart: strimzi-kafka-operator
+        namespace: mathtrail
+        valuesFiles:
+          - values/strimzi-values.yaml
+        wait: true
