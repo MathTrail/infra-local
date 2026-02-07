@@ -28,11 +28,11 @@ just uninstall
 
 ## Services
 
-| Service    | Chart                  | Namespace   | Access                            |
-|------------|------------------------|-------------|-----------------------------------|
-| PostgreSQL | `mathtrail/postgresql` | `mathtrail` | `postgres.mathtrail.svc:5432`     |
-| Redis      | `mathtrail/redis`      | `mathtrail` | `redis-master.mathtrail.svc:6379` |
-| Kafka      | `mathtrail/kafka`      | `mathtrail` | `kafka.mathtrail.svc:9092`        |
+| Service    | Deployed via                | Namespace   | Access                                       |
+|------------|-----------------------------|-------------|----------------------------------------------|
+| PostgreSQL | Helm (`mathtrail/postgresql`)| `mathtrail` | `postgres-postgresql.mathtrail.svc:5432`     |
+| Redis      | Helm (`mathtrail/redis`)     | `mathtrail` | `redis-master.mathtrail.svc:6379`            |
+| Kafka      | Strimzi Operator + CR        | `mathtrail` | `kafka-kafka-bootstrap.mathtrail.svc:9092`   |
 
 ## Default Credentials
 
@@ -48,4 +48,5 @@ Local values files are in the [`values/`](values/) directory:
 
 - [`postgresql-values.yaml`](values/postgresql-values.yaml) — standalone, 1Gi storage, nano resources
 - [`redis-values.yaml`](values/redis-values.yaml) — standalone, 1Gi storage, nano resources
-- [`kafka-values.yaml`](values/kafka-values.yaml) — KRaft mode (no ZooKeeper), single controller, PLAINTEXT listeners, 1Gi storage
+- [`strimzi-values.yaml`](values/strimzi-values.yaml) — Strimzi operator config
+- [`kafka-cluster.yaml`](manifests/kafka-cluster.yaml) — single-node KRaft Kafka cluster CR, no TLS, 1Gi storage
