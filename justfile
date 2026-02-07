@@ -1,5 +1,4 @@
 # K3d cluster management commands for MathTrail development
-# Works on both Windows and Linux
 
 set shell := ["bash", "-c"]
 
