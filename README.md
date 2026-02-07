@@ -46,6 +46,7 @@ just status
 > **Note:** Run these commands inside a DevContainer that has `helm` and `kubectl` configured with access to the cluster (see [DevContainer Integration](#devcontainer-integration) below).
 
 ```bash
+cd infra
 just deploy
 ```
 
@@ -56,6 +57,7 @@ This deploys the infrastructure used in local development to the cluster using H
 To tear down all deployed infrastructure services, run inside the DevContainer:
 
 ```bash
+cd infra
 just uninstall
 ```
 
