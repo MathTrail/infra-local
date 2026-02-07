@@ -36,60 +36,6 @@ install:
     echo "✅ All prerequisites installed!"
     echo "🚀 Ready to create cluster: just create"
 
-# Check all prerequisites and dependencies
-check:
-    #!/bin/bash
-    echo "🔍 Checking prerequisites..."
-    echo ""
-    
-    MISSING=()
-    
-    # Check Docker
-    if command -v docker &> /dev/null; then
-        echo "✅ Docker: $(docker --version)"
-    else
-        echo "❌ Docker: NOT INSTALLED"
-        MISSING+=("Docker")
-    fi
-    
-    # Check K3d
-    if command -v k3d &> /dev/null; then
-        echo "✅ K3d: $(k3d --version)"
-    else
-        echo "❌ K3d: NOT INSTALLED (run: just install)"
-        MISSING+=("K3d")
-    fi
-    
-    # Check kubectl (optional but recommended)
-    if command -v kubectl &> /dev/null; then
-        echo "✅ kubectl: $(kubectl version --client --short 2>/dev/null || echo 'installed')"
-    else
-        echo "⚠️  kubectl: optional (install for local cluster management)"
-    fi
-    
-    # Check helm (optional but recommended)
-    if command -v helm &> /dev/null; then
-        echo "✅ Helm: $(helm version --short 2>/dev/null || echo 'installed')"
-    else
-        echo "⚠️  Helm: optional (install for deployments)"
-    fi
-    
-    echo ""
-    echo "Installation instructions at: https://k3d.io/latest/"
-    echo ""
-    
-    if [ ${#MISSING[@]} -gt 0 ]; then
-        echo "❌ Missing dependencies: ${MISSING[*]}"
-        echo ""
-        echo "Install missing tools:"
-        echo "  - Windows: choco install docker-desktop"
-        echo "  - macOS: brew install docker"
-        echo "  - Linux: sudo apt-get install docker.io"
-        exit 1
-    else
-        echo "✅ All prerequisites installed!"
-    fi
-
 # Create k3d development cluster
 create:
     #!/bin/bash
@@ -170,15 +116,6 @@ stop:
     echo "Stopping k3d cluster '$CLUSTER_NAME'..."
     k3d cluster stop "$CLUSTER_NAME"
     echo "✅ Cluster stopped"
-
-# Reset cluster (delete and recreate from scratch)
-reset: delete
-    #!/bin/bash
-    set -e
-    echo "Resetting cluster..."
-    sleep 2
-    just create
-    echo "✅ Cluster reset complete"
 
 # Check cluster status
 status:
@@ -269,36 +206,3 @@ clean:
     
     echo "✅ Cleanup complete"
     echo "Tip: Use 'docker system prune -a' for more aggressive cleanup"
-
-# Show development commands
-help:
-    #!/bin/bash
-    echo "📋 K3d Development Cluster Commands"
-    echo ""
-    echo "Prerequisites:"
-    echo "  just check            - Check all prerequisites and dependencies"
-    echo "  just install          - Install k3d"
-    echo ""
-    echo "Setup:"
-    echo "  just create           - Create development cluster"
-    echo "  just kubeconfig       - Generate and save kubeconfig"
-    echo ""
-    echo "Management:"
-    echo "  just start            - Start the cluster"
-    echo "  just stop             - Stop the cluster"
-    echo "  just delete           - Delete the cluster"
-    echo "  just reset            - Delete and recreate cluster from scratch"
-    echo "  just status           - Show cluster status"
-    echo "  just logs             - View cluster logs"
-    echo "  just clean            - Clean up Docker registry and stopped containers"
-    echo ""
-    echo "Initialization:"
-    echo "  just init-cluster     - Initialize cluster with essential components"
-    echo ""
-    echo "📌 For DevContainer access:"
-    echo "  1. Run 'just kubeconfig' on the host"
-    echo "  2. Share ~/.kube directory in DevContainer mounts"
-    echo "  3. Set KUBECONFIG environment variable in DevContainer"
-
-@default:
-    just help

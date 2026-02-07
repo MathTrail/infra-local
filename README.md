@@ -6,86 +6,6 @@ Local Kubernetes cluster setup using K3d for MathTrail development environment.
 
 This repository manages a local K3d (K3s in Docker) cluster that serves as the local development Kubernetes environment for MathTrail. The cluster can be created and managed from your host machine, and DevContainers across the workspace can deploy services to it using Helm.
 
-## Prerequisites
-
-### System Requirements
-
-- **Docker** — K3d runs Kubernetes in Docker containers
-- **Just** — Task runner for cluster management commands
-- **kubectl** — (optional) Kubernetes command-line tool
-- Internet access to download k3d and container images
-
-### Supported Platforms
-
-- Windows (with WSL2 or Docker Desktop)
-- macOS
-- Linux
-
-## Install Just (Required)
-
-The `just` command runner is required to use the cluster management scripts. Install it on your host machine:
-
-### Windows
-
-**Option 1: Using Chocolatey**
-```powershell
-choco install just
-```
-
-**Option 2: Using Cargo (Rust package manager)**
-```powershell
-cargo install just
-```
-
-**Option 3: Download binary manually**
-1. Download from [GitHub Releases](https://github.com/casey/just/releases)
-2. Extract the binary and add to `PATH`
-
-Verify installation:
-```powershell
-just --version
-```
-
-### macOS
-
-**Option 1: Using Homebrew** (recommended)
-```bash
-brew install just
-```
-
-**Option 2: Using Cargo**
-```bash
-cargo install just
-```
-
-Verify installation:
-```bash
-just --version
-```
-
-### Linux
-
-**Ubuntu/Debian:**
-```bash
-sudo apt-get update
-sudo apt-get install just
-```
-
-**Fedora/RHEL:**
-```bash
-sudo dnf install just
-```
-
-**Using Cargo (all distributions):**
-```bash
-cargo install just
-```
-
-Verify installation:
-```bash
-just --version
-```
-
 ## Quick Start
 
 ### 1. Install K3d
@@ -94,8 +14,6 @@ just --version
 cd mathtrail-infrastructure-local-k3d
 just install
 ```
-
-This will download and install the latest k3d binary.
 
 ### 2. Create Development Cluster
 
@@ -123,35 +41,11 @@ This saves the cluster configuration to `~/.kube/k3d-mathtrail-dev.yaml` and mak
 just status
 ```
 
-## Available Commands
-
-All commands are managed through the `justfile`. View all available commands:
-
-```bash
-just help
-```
-
-### Essential Commands
-
-| Command | Description |
-|---------|-------------|
-| `just install` | Install k3d on the host machine |
-| `just create` | Create the local K3d cluster |
-| `just start` | Start the cluster (if stopped) |
-| `just stop` | Stop the cluster without removing it |
-| `just delete` | Completely remove the cluster |
-| `just reset` | Delete and recreate cluster from scratch (use if creation fails) |
-| `just status` | Show cluster status and information |
-| `just logs` | Stream cluster logs |
-| `just kubeconfig` | Generate and save cluster kubeconfig |
-| `just init-cluster` | Initialize cluster with essential components |
-| `just clean` | Clean up Docker resources (stopped containers, dangling images) |
-
 ## DevContainer Integration
 
 ### For Helm Deployments from DevContainer
 
-To deploy services from other DevContainers (like `mathtrail-mentor` or `mathtrail-ui-web`):
+To deploy services from other DevContainers (like `mathtrail-mentor`):
 
 #### 1. Host Machine Setup
 
@@ -270,43 +164,9 @@ If `just create` fails with errors about registry nodes or bad state:
 
 ```bash
 # Completely reset the cluster (removes old containers, networks, volumes)
-just reset
-
-# This is equivalent to:
 just delete
-sleep 2
 just create
 ```
-
-### Cluster won't start
-
-```bash
-# Check Docker is running
-docker ps
-
-# View recent logs
-just logs
-
-# Reset cluster if needed
-just reset
-
-# For persistent issues, clean up Docker resources
-just clean
-just reset
-```
-
-### DevContainer can't access cluster
-
-```bash
-# Verify kubeconfig exists
-ls -la ~/.kube/k3d-mathtrail-dev.yaml
-
-# Check from within DevContainer
-kubectl config view
-kubectl cluster-info
-```
-
-### Port conflicts
 
 **Default ports:**
 - **HTTP**: 80 (via ingress)
@@ -332,7 +192,3 @@ K3D_PORT_HTTPS := "8443:443@loadbalancer"  # Use 8443 instead of 443
 - [K3s Documentation](https://docs.k3s.io/)
 - [Helm Documentation](https://helm.sh/docs/)
 - [Kubernetes Documentation](https://kubernetes.io/docs/)
-
-## License
-
-See LICENSE file in this repository.
