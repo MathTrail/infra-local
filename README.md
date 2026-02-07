@@ -1,10 +1,10 @@
 # MathTrail Infrastructure Local
 
-Local development infrastructure for the MathTrail platform. Deploys services into a K3d Kubernetes cluster using Helm charts from the [mathtrail-charts](https://github.com/RyazanovAlexander/mathtrail-charts) repository.
+Local development infrastructure for the MathTrail platform.
 
 ## Prerequisites
 
-- A running K3d cluster (see [mathtrail-infra-local devcontainer](.devcontainer/devcontainer.json) or create one on the host)
+- A running K3d cluster (managed by [mathtrail-infra-local-k3s](../mathtrail-infra-local-k3s))
 
 ## Quick Start
 
@@ -14,6 +14,12 @@ Open this repo in the devcontainer, then:
 just deploy
 ```
 
+This will:
+
+1. Add the `mathtrail` Helm repo
+2. Create the `mathtrail` namespace
+3. Install services with local development values
+
 To remove everything:
 
 ```bash
@@ -22,11 +28,11 @@ just uninstall
 
 ## Services
 
-| Service    | Chart                  | Namespace   | Access                          |
-|------------|------------------------|-------------|---------------------------------|
-| PostgreSQL | `mathtrail/postgresql` | `mathtrail` | `postgres.mathtrail.svc:5432`   |
+| Service    | Chart                  | Namespace   | Access                            |
+|------------|------------------------|-------------|-----------------------------------|
+| PostgreSQL | `mathtrail/postgresql` | `mathtrail` | `postgres.mathtrail.svc:5432`     |
 | Redis      | `mathtrail/redis`      | `mathtrail` | `redis-master.mathtrail.svc:6379` |
-| Kafka      | `mathtrail/kafka`      | `mathtrail` | `kafka.mathtrail.svc:9092`      |
+| Kafka      | `mathtrail/kafka`      | `mathtrail` | `kafka.mathtrail.svc:9092`        |
 
 ## Default Credentials
 
