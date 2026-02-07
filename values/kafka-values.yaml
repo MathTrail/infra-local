@@ -1,0 +1,20 @@
+# Kafka local development values
+# Bitnami Kafka 32.4.3 (KRaft mode, no ZooKeeper)
+
+listeners:
+  client:
+    protocol: PLAINTEXT
+  controller:
+    protocol: PLAINTEXT
+  interbroker:
+    protocol: PLAINTEXT
+
+controller:
+  replicaCount: 1
+  persistence:
+    enabled: true
+    size: 1Gi
+  resourcesPreset: "nano"
+
+broker:
+  replicaCount: 0

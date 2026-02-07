@@ -41,6 +41,26 @@ This saves the cluster configuration to `~/.kube/k3d-mathtrail-dev.yaml` and mak
 just status
 ```
 
+### 5. Deploy Infrastructure Services
+
+> **Note:** Run these commands inside a DevContainer that has `helm` and `kubectl` configured with access to the cluster (see [DevContainer Integration](#devcontainer-integration) below).
+
+```bash
+just deploy
+```
+
+This deploys the infrastructure used in local development to the cluster using Helm charts from the MathTrail charts repository.
+
+### 6. Remove Infrastructure Services
+
+To tear down all deployed infrastructure services, run inside the DevContainer:
+
+```bash
+just uninstall
+```
+
+This removes all local infrastructure from the cluster.
+
 ## DevContainer Integration
 
 ### For Helm Deployments from DevContainer

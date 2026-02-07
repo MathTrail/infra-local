@@ -1,0 +1,14 @@
+# Redis local development values
+# Bitnami Redis 24.1.3
+
+architecture: standalone
+
+auth:
+  enabled: true
+  password: "mathtrail"
+
+master:
+  persistence:
+    enabled: true
+    size: 1Gi
+  resourcesPreset: "nano"

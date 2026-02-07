@@ -1,0 +1,16 @@
+# PostgreSQL local development values
+# Bitnami PostgreSQL 18.2.4
+
+architecture: standalone
+
+auth:
+  postgresPassword: "mathtrail"
+  username: "mathtrail"
+  password: "mathtrail"
+  database: "mathtrail"
+
+primary:
+  persistence:
+    enabled: true
+    size: 1Gi
+  resourcesPreset: "nano"
