@@ -1,15 +1,39 @@
 # Kafka cluster CR for local development (Strimzi)
-# Single-node KRaft cluster, no TLS, ephemeral storage
+# Single-node KRaft cluster, no TLS, persistent storage
 
-apiVersion: kafka.strimzi.io/v1beta2
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaNodePool
+metadata:
+  name: kafka
+  namespace: mathtrail
+  labels:
+    strimzi.io/cluster: kafka
+spec:
+  replicas: 1
+  roles:
+    - controller
+    - broker
+  storage:
+    type: persistent-claim
+    size: 1Gi
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+---
+apiVersion: kafka.strimzi.io/v1
 kind: Kafka
 metadata:
   name: kafka
   namespace: mathtrail
+  annotations:
+    strimzi.io/node-pools: enabled
 spec:
   kafka:
-    version: 3.9.0
-    replicas: 1
+    version: 4.1.1
     listeners:
       - name: plain
         port: 9092
@@ -21,16 +45,6 @@ spec:
       transaction.state.log.min.isr: 1
       default.replication.factor: 1
       min.insync.replicas: 1
-    storage:
-      type: persistent-claim
-      size: 1Gi
-    resources:
-      requests:
-        memory: 256Mi
-        cpu: 100m
-      limits:
-        memory: 512Mi
-        cpu: 500m
   entityOperator:
     topicOperator: {}
     userOperator: {}
