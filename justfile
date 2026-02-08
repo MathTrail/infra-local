@@ -9,6 +9,7 @@ deploy:
     #!/bin/bash
     set -e
     echo "🚀 Deploying infrastructure services..."
+    kubectl create namespace {{ NAMESPACE }} 2>/dev/null || true
     skaffold deploy
     echo ""
     echo "⏳ Waiting for Kafka cluster to be ready..."

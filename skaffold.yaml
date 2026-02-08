@@ -16,7 +16,6 @@ deploy:
         repo: https://RyazanovAlexander.github.io/mathtrail-charts/charts
         remoteChart: postgresql
         namespace: mathtrail
-        createNamespace: true
         valuesFiles:
           - values/postgresql-values.yaml
         wait: false
