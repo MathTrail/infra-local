@@ -29,7 +29,8 @@
                 "vscode-icons-team.vscode-icons",
                 "waderyan.gitblame",
                 "donjayamanne.githistory",
-                "Tim-Koehler.helm-intellisense"
+                "Tim-Koehler.helm-intellisense",
+                "anthropic.claude-code"
             ]
         }
     },
