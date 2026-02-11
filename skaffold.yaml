@@ -1,7 +1,7 @@
 apiVersion: skaffold/v4beta12
 kind: Config
 metadata:
-  name: mathtrail-infra
+  name: mathtrail-infra-local
 
 manifests:
   rawYaml:
