@@ -29,7 +29,7 @@ deploy:
         wait: false
 
       - name: strimzi
-        repo: https://strimzi.io/charts/
+        repo: https://RyazanovAlexander.github.io/mathtrail-charts/charts
         remoteChart: strimzi-kafka-operator
         namespace: mathtrail
         valuesFiles:

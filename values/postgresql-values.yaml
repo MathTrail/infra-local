@@ -14,3 +14,12 @@ primary:
     enabled: true
     size: 1Gi
   resourcesPreset: "nano"
+  initdb:
+    scripts:
+      create-identity-dbs.sql: |
+        CREATE DATABASE kratos;
+        CREATE DATABASE hydra;
+        CREATE DATABASE keto;
+        GRANT ALL PRIVILEGES ON DATABASE kratos TO mathtrail;
+        GRANT ALL PRIVILEGES ON DATABASE hydra TO mathtrail;
+        GRANT ALL PRIVILEGES ON DATABASE keto TO mathtrail;
