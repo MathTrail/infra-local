@@ -1,4 +1,4 @@
-apiVersion: skaffold/v4beta12
+﻿apiVersion: skaffold/v4beta12
 kind: Config
 metadata:
   name: mathtrail-infra-local
@@ -13,7 +13,7 @@ deploy:
   helm:
     releases:
       - name: postgres
-        repo: https://RyazanovAlexander.github.io/mathtrail-charts/charts
+        repo: https://MathTrail.github.io/mathtrail-charts/charts
         remoteChart: postgresql
         namespace: mathtrail
         valuesFiles:
@@ -21,7 +21,7 @@ deploy:
         wait: false
 
       - name: redis
-        repo: https://RyazanovAlexander.github.io/mathtrail-charts/charts
+        repo: https://MathTrail.github.io/mathtrail-charts/charts
         remoteChart: redis
         namespace: mathtrail
         valuesFiles:
@@ -29,7 +29,7 @@ deploy:
         wait: false
 
       - name: strimzi
-        repo: https://RyazanovAlexander.github.io/mathtrail-charts/charts
+        repo: https://MathTrail.github.io/mathtrail-charts/charts
         remoteChart: strimzi-kafka-operator
         namespace: mathtrail
         valuesFiles:
