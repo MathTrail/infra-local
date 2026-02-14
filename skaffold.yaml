@@ -13,7 +13,7 @@ deploy:
   helm:
     releases:
       - name: postgres
-        repo: https://MathTrail.github.io/mathtrail-charts/charts
+        repo: https://MathTrail.github.io/charts/charts
         remoteChart: postgresql
         namespace: mathtrail
         valuesFiles:
@@ -21,7 +21,7 @@ deploy:
         wait: false
 
       - name: redis
-        repo: https://MathTrail.github.io/mathtrail-charts/charts
+        repo: https://MathTrail.github.io/charts/charts
         remoteChart: redis
         namespace: mathtrail
         valuesFiles:
@@ -29,7 +29,7 @@ deploy:
         wait: false
 
       - name: strimzi
-        repo: https://MathTrail.github.io/mathtrail-charts/charts
+        repo: https://MathTrail.github.io/charts/charts
         remoteChart: strimzi-kafka-operator
         namespace: mathtrail
         valuesFiles:
