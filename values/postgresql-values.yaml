@@ -1,0 +1,25 @@
+# PostgreSQL local development values
+# Bitnami PostgreSQL 18.2.4
+
+architecture: standalone
+
+auth:
+  postgresPassword: "mathtrail"
+  username: "mathtrail"
+  password: "mathtrail"
+  database: "mathtrail"
+
+primary:
+  persistence:
+    enabled: true
+    size: 1Gi
+  resourcesPreset: "nano"
+  initdb:
+    scripts:
+      create-identity-dbs.sql: |
+        CREATE DATABASE kratos;
+        CREATE DATABASE hydra;
+        CREATE DATABASE keto;
+        GRANT ALL PRIVILEGES ON DATABASE kratos TO mathtrail;
+        GRANT ALL PRIVILEGES ON DATABASE hydra TO mathtrail;
+        GRANT ALL PRIVILEGES ON DATABASE keto TO mathtrail;
