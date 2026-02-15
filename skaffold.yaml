@@ -44,4 +44,6 @@ deploy:
         remoteChart: telepresence-oss
         namespace: ambassador
         createNamespace: true
+        valuesFiles:
+          - values/telepresence-values.yaml
         wait: true
