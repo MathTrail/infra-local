@@ -23,7 +23,7 @@ This will:
 To remove everything:
 
 ```bash
-just uninstall
+just delete
 ```
 
 ## Services

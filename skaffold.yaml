@@ -16,6 +16,7 @@ deploy:
         repo: https://MathTrail.github.io/charts/charts
         remoteChart: postgresql
         namespace: mathtrail
+        createNamespace: true
         valuesFiles:
           - values/postgresql-values.yaml
         wait: false
@@ -24,6 +25,7 @@ deploy:
         repo: https://MathTrail.github.io/charts/charts
         remoteChart: redis
         namespace: mathtrail
+        createNamespace: true
         valuesFiles:
           - values/redis-values.yaml
         wait: false
@@ -32,6 +34,14 @@ deploy:
         repo: https://MathTrail.github.io/charts/charts
         remoteChart: strimzi-kafka-operator
         namespace: mathtrail
+        createNamespace: true
         valuesFiles:
           - values/strimzi-values.yaml
+        wait: true
+
+      - name: traffic-manager
+        repo: https://MathTrail.github.io/charts/charts
+        remoteChart: telepresence-oss
+        namespace: ambassador
+        createNamespace: true
         wait: true
