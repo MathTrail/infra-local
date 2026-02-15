@@ -12,7 +12,7 @@
         "ghcr.io/eitsupi/devcontainer-features/just:0.1.1": {}
     },
     "mounts": [
-        "source=${localEnv:HOME}${localEnv:USERPROFILE}/.kube,target=/home/vscode/.kube,type=bind,consistency=cached"
+        "source=${localEnv:HOME}${localEnv:USERPROFILE}/.kube,target=/home/vscode/.kube-host,type=bind,consistency=cached"
     ],
     "remoteEnv": {
         "KUBECONFIG": "/home/vscode/.kube/k3d-mathtrail-dev.yaml"
