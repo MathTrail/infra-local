@@ -50,6 +50,9 @@ deploy:
 
 profiles:
   - name: postgres
+    patches:
+      - op: remove
+        path: /manifests
     deploy:
       helm:
         releases:
@@ -62,6 +65,9 @@ profiles:
             wait: true
 
   - name: redis
+    patches:
+      - op: remove
+        path: /manifests
     deploy:
       helm:
         releases:
@@ -89,6 +95,9 @@ profiles:
             wait: true
 
   - name: telepresence
+    patches:
+      - op: remove
+        path: /manifests
     deploy:
       helm:
         releases:
