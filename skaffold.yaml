@@ -47,3 +47,67 @@ deploy:
         valuesFiles:
           - values/telepresence-values.yaml
         wait: true
+
+profiles:
+  - name: postgres
+    deploy:
+      kubectl:
+        defaultNamespace: mathtrail
+      helm:
+        releases:
+          - name: postgres
+            repo: https://MathTrail.github.io/charts/charts
+            remoteChart: postgresql
+            namespace: mathtrail
+            createNamespace: true
+            valuesFiles:
+              - values/postgresql-values.yaml
+            wait: true
+
+  - name: redis
+    deploy:
+      kubectl:
+        defaultNamespace: mathtrail
+      helm:
+        releases:
+          - name: redis
+            repo: https://MathTrail.github.io/charts/charts
+            remoteChart: redis
+            namespace: mathtrail
+            createNamespace: true
+            valuesFiles:
+              - values/redis-values.yaml
+            wait: true
+
+  - name: kafka
+    manifests:
+      rawYaml:
+        - manifests/kafka-cluster.yaml
+    deploy:
+      kubectl:
+        defaultNamespace: mathtrail
+      helm:
+        releases:
+          - name: strimzi
+            repo: https://MathTrail.github.io/charts/charts
+            remoteChart: strimzi-kafka-operator
+            namespace: mathtrail
+            createNamespace: true
+            valuesFiles:
+              - values/strimzi-values.yaml
+            wait: true
+
+  - name: telepresence
+    deploy:
+      kubectl:
+        defaultNamespace: mathtrail
+      helm:
+        releases:
+          - name: traffic-manager
+            repo: https://MathTrail.github.io/charts/charts
+            remoteChart: telepresence-oss
+            namespace: ambassador
+            createNamespace: true
+            valuesFiles:
+              - values/telepresence-values.yaml
+            wait: true
