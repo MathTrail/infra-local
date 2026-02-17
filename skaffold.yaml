@@ -51,14 +51,11 @@ deploy:
 profiles:
   - name: postgres
     deploy:
-      kubectl:
-        defaultNamespace: mathtrail
       helm:
         releases:
           - name: postgres
             repo: https://MathTrail.github.io/charts/charts
             remoteChart: postgresql
-            namespace: mathtrail
             createNamespace: true
             valuesFiles:
               - values/postgresql-values.yaml
@@ -66,14 +63,11 @@ profiles:
 
   - name: redis
     deploy:
-      kubectl:
-        defaultNamespace: mathtrail
       helm:
         releases:
           - name: redis
             repo: https://MathTrail.github.io/charts/charts
             remoteChart: redis
-            namespace: mathtrail
             createNamespace: true
             valuesFiles:
               - values/redis-values.yaml
@@ -84,14 +78,11 @@ profiles:
       rawYaml:
         - manifests/kafka-cluster.yaml
     deploy:
-      kubectl:
-        defaultNamespace: mathtrail
       helm:
         releases:
           - name: strimzi
             repo: https://MathTrail.github.io/charts/charts
             remoteChart: strimzi-kafka-operator
-            namespace: mathtrail
             createNamespace: true
             valuesFiles:
               - values/strimzi-values.yaml
@@ -99,8 +90,6 @@ profiles:
 
   - name: telepresence
     deploy:
-      kubectl:
-        defaultNamespace: mathtrail
       helm:
         releases:
           - name: traffic-manager
