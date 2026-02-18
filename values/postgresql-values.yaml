@@ -23,3 +23,15 @@ primary:
         GRANT ALL PRIVILEGES ON DATABASE kratos TO mathtrail;
         GRANT ALL PRIVILEGES ON DATABASE hydra TO mathtrail;
         GRANT ALL PRIVILEGES ON DATABASE keto TO mathtrail;
+      create-pgbouncer-auth.sql: |
+        CREATE USER pgbouncer_auth WITH PASSWORD 'pgbouncer_auth_pass';
+        GRANT pg_read_all_auth_data TO pgbouncer_auth;
+      vault-default-privileges.sql: |
+        -- Vault Database Secrets Engine creates short-lived users in the mentor DB.
+        -- Pre-grant default privileges so dynamic users automatically get access to
+        -- tables and sequences created by future migrations (not just existing ones).
+        \connect mentor
+        ALTER DEFAULT PRIVILEGES IN SCHEMA public
+          GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO PUBLIC;
+        ALTER DEFAULT PRIVILEGES IN SCHEMA public
+          GRANT USAGE, SELECT ON SEQUENCES TO PUBLIC;

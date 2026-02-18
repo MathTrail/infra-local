@@ -1,4 +1,4 @@
-﻿apiVersion: skaffold/v4beta13
+apiVersion: skaffold/v4beta13
 kind: Config
 metadata:
   name: infra-local
@@ -6,9 +6,14 @@ metadata:
 requires:
   - configs:
       - postgres
+  - configs:
+      - pgbouncer
       - redis
       - kafka
       - telepresence
+      - vault
+      - external-secrets
+      - vault-init
 
 ---
 apiVersion: skaffold/v4beta13
@@ -22,6 +27,7 @@ deploy:
       - name: postgres
         repo: https://MathTrail.github.io/charts/charts
         remoteChart: postgresql
+        namespace: ${NAMESPACE}
         createNamespace: true
         valuesFiles:
           - values/postgresql-values.yaml
@@ -39,6 +45,7 @@ deploy:
       - name: redis
         repo: https://MathTrail.github.io/charts/charts
         remoteChart: redis
+        namespace: ${NAMESPACE}
         createNamespace: true
         valuesFiles:
           - values/redis-values.yaml
@@ -55,12 +62,14 @@ manifests:
     - manifests/kafka-cluster.yaml
 
 deploy:
-  kubectl: {}
+  kubectl:
+    defaultNamespace: ${NAMESPACE}
   helm:
     releases:
       - name: strimzi
         repo: https://MathTrail.github.io/charts/charts
         remoteChart: strimzi-kafka-operator
+        namespace: ${NAMESPACE}
         createNamespace: true
         valuesFiles:
           - values/strimzi-values.yaml
@@ -83,3 +92,71 @@ deploy:
         valuesFiles:
           - values/telepresence-values.yaml
         wait: true
+
+---
+apiVersion: skaffold/v4beta13
+kind: Config
+metadata:
+  name: pgbouncer
+
+manifests:
+  rawYaml:
+    - manifests/pgbouncer.yaml
+    - manifests/pgbouncer-dashboard.yaml
+
+deploy:
+  kubectl:
+    defaultNamespace: ${NAMESPACE}
+
+---
+apiVersion: skaffold/v4beta13
+kind: Config
+metadata:
+  name: vault
+
+deploy:
+  helm:
+    releases:
+      - name: vault
+        repo: https://MathTrail.github.io/charts/charts
+        remoteChart: vault
+        namespace: vault
+        createNamespace: true
+        valuesFiles:
+          - values/vault-values.yaml
+        wait: true
+
+---
+apiVersion: skaffold/v4beta13
+kind: Config
+metadata:
+  name: external-secrets
+
+deploy:
+  helm:
+    releases:
+      - name: external-secrets
+        repo: https://MathTrail.github.io/charts/charts
+        remoteChart: external-secrets
+        namespace: external-secrets
+        createNamespace: true
+        valuesFiles:
+          - values/external-secrets-values.yaml
+        wait: true
+
+---
+# vault-init deploys into the same namespace as postgres (where the Postgres secret lives).
+# The Job waits for Vault to be ready, then configures the Database Secrets Engine and K8s auth.
+apiVersion: skaffold/v4beta13
+kind: Config
+metadata:
+  name: vault-init
+
+manifests:
+  rawYaml:
+    - manifests/vault-init-job.yaml
+    - manifests/cluster-secret-store.yaml
+
+deploy:
+  kubectl:
+    defaultNamespace: ${NAMESPACE}
