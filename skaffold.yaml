@@ -26,9 +26,9 @@ deploy:
   helm:
     releases:
       - name: postgres
-        repo: ${CHARTS_REPO}
+        repo: "{{.CHARTS_REPO}}"
         remoteChart: postgresql
-        namespace: ${NAMESPACE}
+        namespace: "{{.NAMESPACE}}"
         createNamespace: true
         valuesFiles:
           - values/postgresql-values.yaml
@@ -44,9 +44,9 @@ deploy:
   helm:
     releases:
       - name: redis
-        repo: ${CHARTS_REPO}
+        repo: "{{.CHARTS_REPO}}"
         remoteChart: redis
-        namespace: ${NAMESPACE}
+        namespace: "{{.NAMESPACE}}"
         createNamespace: true
         valuesFiles:
           - values/redis-values.yaml
@@ -64,13 +64,13 @@ manifests:
 
 deploy:
   kubectl:
-    defaultNamespace: ${NAMESPACE}
+    defaultNamespace: "{{.NAMESPACE}}"
   helm:
     releases:
       - name: strimzi
-        repo: ${CHARTS_REPO}
+        repo: "{{.CHARTS_REPO}}"
         remoteChart: strimzi-kafka-operator
-        namespace: ${NAMESPACE}
+        namespace: "{{.NAMESPACE}}"
         createNamespace: true
         valuesFiles:
           - values/strimzi-values.yaml
@@ -86,7 +86,7 @@ deploy:
   helm:
     releases:
       - name: traffic-manager
-        repo: ${CHARTS_REPO}
+        repo: "{{.CHARTS_REPO}}"
         remoteChart: telepresence-oss
         namespace: ambassador
         createNamespace: true
@@ -107,7 +107,7 @@ manifests:
 
 deploy:
   kubectl:
-    defaultNamespace: ${NAMESPACE}
+    defaultNamespace: "{{.NAMESPACE}}"
 
 ---
 apiVersion: skaffold/v4beta13
@@ -119,7 +119,7 @@ deploy:
   helm:
     releases:
       - name: vault
-        repo: ${CHARTS_REPO}
+        repo: "{{.CHARTS_REPO}}"
         remoteChart: vault
         namespace: vault
         createNamespace: true
@@ -137,7 +137,7 @@ deploy:
   helm:
     releases:
       - name: external-secrets
-        repo: ${CHARTS_REPO}
+        repo: "{{.CHARTS_REPO}}"
         remoteChart: external-secrets
         namespace: external-secrets
         createNamespace: true
@@ -160,4 +160,4 @@ manifests:
 
 deploy:
   kubectl:
-    defaultNamespace: ${NAMESPACE}
+    defaultNamespace: "{{.NAMESPACE}}"
