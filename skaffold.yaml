@@ -1,9 +1,10 @@
-apiVersion: skaffold/v4beta13
+﻿apiVersion: skaffold/v4beta13
 kind: Config
 metadata:
   name: infra-local
 
 requires:
+  # Bring up Postgres first so dependent services can start after it is ready.
   - configs:
       - postgres
   - configs:
@@ -25,7 +26,7 @@ deploy:
   helm:
     releases:
       - name: postgres
-        repo: https://MathTrail.github.io/charts/charts
+        repo: ${CHARTS_REPO}
         remoteChart: postgresql
         namespace: ${NAMESPACE}
         createNamespace: true
@@ -43,7 +44,7 @@ deploy:
   helm:
     releases:
       - name: redis
-        repo: https://MathTrail.github.io/charts/charts
+        repo: ${CHARTS_REPO}
         remoteChart: redis
         namespace: ${NAMESPACE}
         createNamespace: true
@@ -67,7 +68,7 @@ deploy:
   helm:
     releases:
       - name: strimzi
-        repo: https://MathTrail.github.io/charts/charts
+        repo: ${CHARTS_REPO}
         remoteChart: strimzi-kafka-operator
         namespace: ${NAMESPACE}
         createNamespace: true
@@ -85,7 +86,7 @@ deploy:
   helm:
     releases:
       - name: traffic-manager
-        repo: https://MathTrail.github.io/charts/charts
+        repo: ${CHARTS_REPO}
         remoteChart: telepresence-oss
         namespace: ambassador
         createNamespace: true
@@ -118,7 +119,7 @@ deploy:
   helm:
     releases:
       - name: vault
-        repo: https://MathTrail.github.io/charts/charts
+        repo: ${CHARTS_REPO}
         remoteChart: vault
         namespace: vault
         createNamespace: true
@@ -136,7 +137,7 @@ deploy:
   helm:
     releases:
       - name: external-secrets
-        repo: https://MathTrail.github.io/charts/charts
+        repo: ${CHARTS_REPO}
         remoteChart: external-secrets
         namespace: external-secrets
         createNamespace: true
