@@ -1,7 +1,11 @@
-# Deploy all infrastructure components to the Kubernetes cluster
-deploy:
-    skaffold deploy --namespace ${NAMESPACE}
+# MathTrail Local Infrastructure
 
-# Delete all deployed infrastructure components from the Kubernetes cluster
+set shell := ["bash", "-c"]
+
+# Deploy all infrastructure components to the cluster
+deploy:
+    skaffold deploy
+
+# Delete all deployed infrastructure components from the cluster
 delete:
-    skaffold delete --namespace ${NAMESPACE}
+    skaffold delete
