@@ -20,9 +20,11 @@ primary:
         CREATE DATABASE kratos;
         CREATE DATABASE hydra;
         CREATE DATABASE keto;
+        CREATE DATABASE mentor;
         GRANT ALL PRIVILEGES ON DATABASE kratos TO mathtrail;
         GRANT ALL PRIVILEGES ON DATABASE hydra TO mathtrail;
         GRANT ALL PRIVILEGES ON DATABASE keto TO mathtrail;
+        GRANT ALL PRIVILEGES ON DATABASE mentor TO mathtrail;
       create-pgbouncer-auth.sql: |
         CREATE USER pgbouncer_auth WITH PASSWORD 'pgbouncer_auth_pass';
         GRANT pg_read_all_auth_data TO pgbouncer_auth;

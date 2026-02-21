@@ -8,7 +8,6 @@ requires:
   - configs:
       - postgres
   - configs:
-      - pgbouncer
       - redis
       - kafka
       - telepresence
@@ -93,21 +92,6 @@ deploy:
         valuesFiles:
           - values/telepresence-values.yaml
         wait: true
-
----
-apiVersion: skaffold/v4beta13
-kind: Config
-metadata:
-  name: pgbouncer
-
-manifests:
-  rawYaml:
-    - manifests/pgbouncer.yaml
-    - manifests/pgbouncer-dashboard.yaml
-
-deploy:
-  kubectl:
-    defaultNamespace: "{{.NAMESPACE}}"
 
 ---
 apiVersion: skaffold/v4beta13
