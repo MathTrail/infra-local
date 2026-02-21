@@ -14,6 +14,7 @@ registry-data/
 # Local environment files
 .env.local
 *.local
+skaffold.env
 
 # OS
 .DS_Store

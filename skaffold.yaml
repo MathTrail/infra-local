@@ -4,11 +4,17 @@ metadata:
   name: infra-local
 
 requires:
+  # Bring up Postgres first so dependent services can start after it is ready.
   - configs:
       - postgres
+  - configs:
+      - pgbouncer
       - redis
       - kafka
       - telepresence
+      - vault
+      - external-secrets
+      - vault-init
 
 ---
 apiVersion: skaffold/v4beta13
@@ -20,8 +26,9 @@ deploy:
   helm:
     releases:
       - name: postgres
-        repo: https://MathTrail.github.io/charts/charts
+        repo: "{{.CHARTS_REPO}}"
         remoteChart: postgresql
+        namespace: "{{.NAMESPACE}}"
         createNamespace: true
         valuesFiles:
           - values/postgresql-values.yaml
@@ -37,8 +44,9 @@ deploy:
   helm:
     releases:
       - name: redis
-        repo: https://MathTrail.github.io/charts/charts
+        repo: "{{.CHARTS_REPO}}"
         remoteChart: redis
+        namespace: "{{.NAMESPACE}}"
         createNamespace: true
         valuesFiles:
           - values/redis-values.yaml
@@ -55,12 +63,14 @@ manifests:
     - manifests/kafka-cluster.yaml
 
 deploy:
-  kubectl: {}
+  kubectl:
+    defaultNamespace: "{{.NAMESPACE}}"
   helm:
     releases:
       - name: strimzi
-        repo: https://MathTrail.github.io/charts/charts
+        repo: "{{.CHARTS_REPO}}"
         remoteChart: strimzi-kafka-operator
+        namespace: "{{.NAMESPACE}}"
         createNamespace: true
         valuesFiles:
           - values/strimzi-values.yaml
@@ -76,10 +86,78 @@ deploy:
   helm:
     releases:
       - name: traffic-manager
-        repo: https://MathTrail.github.io/charts/charts
+        repo: "{{.CHARTS_REPO}}"
         remoteChart: telepresence-oss
         namespace: ambassador
         createNamespace: true
         valuesFiles:
           - values/telepresence-values.yaml
         wait: true
+
+---
+apiVersion: skaffold/v4beta13
+kind: Config
+metadata:
+  name: vault
+
+deploy:
+  helm:
+    releases:
+      - name: vault
+        repo: "{{.CHARTS_REPO}}"
+        remoteChart: vault
+        namespace: vault
+        createNamespace: true
+        valuesFiles:
+          - values/vault-values.yaml
+        wait: true
+
+---
+apiVersion: skaffold/v4beta13
+kind: Config
+metadata:
+  name: external-secrets
+
+deploy:
+  helm:
+    releases:
+      - name: external-secrets
+        repo: "{{.CHARTS_REPO}}"
+        remoteChart: external-secrets
+        namespace: external-secrets
+        createNamespace: true
+        valuesFiles:
+          - values/external-secrets-values.yaml
+        wait: true
+
+---
+apiVersion: skaffold/v4beta13
+kind: Config
+metadata:
+  name: pgbouncer
+
+manifests:
+  kustomize:
+    paths:
+      - manifests/pgbouncer
+
+deploy:
+  kubectl:
+    defaultNamespace: "{{.NAMESPACE}}"
+
+---
+# vault-init deploys into the same namespace as postgres (where the Postgres secret lives).
+# The Job waits for Vault to be ready, then configures the Database Secrets Engine and K8s auth.
+apiVersion: skaffold/v4beta13
+kind: Config
+metadata:
+  name: vault-init
+
+manifests:
+  rawYaml:
+    - manifests/vault-init-job.yaml
+    - manifests/cluster-secret-store.yaml
+
+deploy:
+  kubectl:
+    defaultNamespace: "{{.NAMESPACE}}"
