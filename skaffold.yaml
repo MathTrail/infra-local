@@ -8,6 +8,7 @@ requires:
   - configs:
       - postgres
   - configs:
+      - pgbouncer
       - redis
       - kafka
       - telepresence
@@ -128,6 +129,21 @@ deploy:
         valuesFiles:
           - values/external-secrets-values.yaml
         wait: true
+
+---
+apiVersion: skaffold/v4beta13
+kind: Config
+metadata:
+  name: pgbouncer
+
+manifests:
+  kustomize:
+    paths:
+      - manifests/pgbouncer
+
+deploy:
+  kubectl:
+    defaultNamespace: "{{.NAMESPACE}}"
 
 ---
 # vault-init deploys into the same namespace as postgres (where the Postgres secret lives).
