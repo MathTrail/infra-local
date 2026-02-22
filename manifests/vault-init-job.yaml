@@ -58,17 +58,17 @@ spec:
               # ── Database Secrets Engine ──────────────────────────────────
               vault secrets enable database 2>/dev/null || echo "database secrets already enabled"
 
-              vault write database/config/mentor-postgres \
+              vault write database/config/mentor-postgres-${NAMESPACE} \
                 plugin_name="postgresql-database-plugin" \
-                allowed_roles="mentor-api-role" \
+                allowed_roles="mentor-api-role-${NAMESPACE}" \
                 connection_url="postgresql://postgres:${PG_PASSWORD}@${PG_HOST}:5432/mentor?sslmode=disable" \
                 username="postgres" \
                 password="${PG_PASSWORD}"
 
               # Dynamic role: short-lived users with DML access on the mentor DB.
               # TTL 1h (default), max 24h. ESO refreshes at 55m to stay ahead of expiry.
-              vault write database/roles/mentor-api-role \
-                db_name="mentor-postgres" \
+              vault write database/roles/mentor-api-role-${NAMESPACE} \
+                db_name="mentor-postgres-${NAMESPACE}" \
                 creation_statements="
                   CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
                   GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO \"{{name}}\";
@@ -80,7 +80,7 @@ spec:
 
               # ── Policy for ESO ───────────────────────────────────────────
               vault policy write eso-policy - <<'POLICY'
-              path "database/creds/mentor-api-role" {
+              path "database/creds/mentor-api-role-*" {
                 capabilities = ["read"]
               }
               POLICY
