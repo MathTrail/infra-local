@@ -7,7 +7,7 @@ Tech Stack: Helm, Just, Strimzi Operator (Kafka)
 Namespace: mathtrail
 
 # Communication Map
-No Dapr communication — provides data stores.
+Provides data stores only.
 Services that depend on this: mathtrail-profile (PostgreSQL, Redis), mathtrail-identity (PostgreSQL for Ory), mathtrail-task (PostgreSQL).
 Default credentials: mathtrail/mathtrail (PostgreSQL), mathtrail (Redis).
 
