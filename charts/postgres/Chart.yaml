@@ -1,0 +1,8 @@
+apiVersion: v2
+name: postgres
+description: PostgreSQL for MathTrail (local dev)
+version: 0.1.0
+dependencies:
+  - name: postgresql
+    version: "18.5.1"
+    repository: "https://MathTrail.github.io/charts/charts"

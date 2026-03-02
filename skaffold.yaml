@@ -1,4 +1,4 @@
-﻿apiVersion: skaffold/v4beta13
+apiVersion: skaffold/v4beta13
 kind: Config
 metadata:
   name: infra-local
@@ -11,7 +11,6 @@ requires:
       - pgbouncer
       - redis
       - kafka
-      - vault-db-init
 
 ---
 apiVersion: skaffold/v4beta13
@@ -23,12 +22,9 @@ deploy:
   helm:
     releases:
       - name: postgres
-        repo: "{{.CHARTS_REPO}}"
-        remoteChart: postgresql
+        chartPath: charts/postgres
         namespace: "{{.NAMESPACE}}"
         createNamespace: true
-        valuesFiles:
-          - values/postgresql-values.yaml
         wait: true
 
 ---
@@ -41,12 +37,9 @@ deploy:
   helm:
     releases:
       - name: redis
-        repo: "{{.CHARTS_REPO}}"
-        remoteChart: redis
+        chartPath: charts/redis
         namespace: "{{.NAMESPACE}}"
         createNamespace: true
-        valuesFiles:
-          - values/redis-values.yaml
         wait: true
 
 ---
@@ -55,25 +48,14 @@ kind: Config
 metadata:
   name: kafka
 
-manifests:
-  rawYaml:
-    - manifests/kafka-cluster.yaml
-
 deploy:
-  kubectl:
-    defaultNamespace: "{{.NAMESPACE}}"
   helm:
     releases:
-      - name: strimzi
-        repo: "{{.CHARTS_REPO}}"
-        remoteChart: strimzi-kafka-operator
+      - name: kafka
+        chartPath: charts/kafka
         namespace: "{{.NAMESPACE}}"
         createNamespace: true
-        valuesFiles:
-          - values/strimzi-values.yaml
         wait: true
-
-
 
 ---
 apiVersion: skaffold/v4beta13
@@ -81,27 +63,11 @@ kind: Config
 metadata:
   name: pgbouncer
 
-manifests:
-  kustomize:
-    paths:
-      - manifests/pgbouncer
-
 deploy:
-  kubectl:
-    defaultNamespace: "{{.NAMESPACE}}"
-
----
-# vault-db-init creates per-namespace Vault database config and dynamic role.
-# Requires vault-cluster-init (from infra/) to have run first.
-apiVersion: skaffold/v4beta13
-kind: Config
-metadata:
-  name: vault-db-init
-
-manifests:
-  rawYaml:
-    - manifests/vault-db-init-job.yaml
-
-deploy:
-  kubectl:
-    defaultNamespace: "{{.NAMESPACE}}"
+  helm:
+    releases:
+      - name: pgbouncer
+        chartPath: charts/pgbouncer
+        namespace: "{{.NAMESPACE}}"
+        createNamespace: true
+        wait: true
