@@ -2,6 +2,12 @@
 # Bitnami Redis 25.3.2
 # Values are nested under the dependency name (redis).
 
+vaultPush:
+  secretStore:
+    name: vault-kv-backend
+    kind: ClusterSecretStore
+  refreshInterval: 1h
+
 redis:
   architecture: standalone
 

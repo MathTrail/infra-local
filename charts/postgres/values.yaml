@@ -2,6 +2,12 @@
 # Bitnami PostgreSQL 18.5.1
 # Values are nested under the dependency name (postgresql).
 
+vaultPush:
+  secretStore:
+    name: vault-kv-backend
+    kind: ClusterSecretStore
+  refreshInterval: 1h
+
 postgresql:
   architecture: standalone
 

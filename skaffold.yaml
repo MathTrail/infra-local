@@ -11,7 +11,6 @@ requires:
       - pgbouncer
       - redis
       - kafka
-      - vault-push
 
 ---
 apiVersion: skaffold/v4beta13
@@ -72,26 +71,3 @@ deploy:
         namespace: "{{.NAMESPACE}}"
         createNamespace: true
         wait: true
-
----
-apiVersion: skaffold/v4beta13
-kind: Config
-metadata:
-  name: vault-push
-
-# PushSecrets push postgres/redis credentials from Bitnami K8s Secrets to Vault KV.
-# Requires postgres and redis to be deployed first (K8s Secrets must exist).
-# Requires ESO + Vault to be running (managed by infra repo, deployed separately).
-# PushSecrets retry automatically — ordering with infra is handled by retry backoff.
-requires:
-  - configs:
-      - postgres
-      - redis
-
-deploy:
-  helm:
-    releases:
-      - name: vault-push
-        chartPath: charts/vault-push
-        namespace: "{{.NAMESPACE}}"
-        createNamespace: true

@@ -1,5 +1,0 @@
-secretStore:
-  name: vault-kv-backend
-  kind: ClusterSecretStore
-
-refreshInterval: 1h

@@ -14,10 +14,10 @@ metadata:
   name: postgres-creds-push
   namespace: {{ .Release.Namespace }}
 spec:
-  refreshInterval: {{ .Values.refreshInterval }}
+  refreshInterval: {{ .Values.vaultPush.refreshInterval }}
   secretStoreRef:
-    kind: {{ .Values.secretStore.kind }}
-    name: {{ .Values.secretStore.name }}
+    kind: {{ .Values.vaultPush.secretStore.kind }}
+    name: {{ .Values.vaultPush.secretStore.name }}
   selector:
     secret:
       name: postgres-postgresql
