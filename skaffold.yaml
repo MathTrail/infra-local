@@ -23,12 +23,9 @@ deploy:
   helm:
     releases:
       - name: postgres
-        repo: "{{.CHARTS_REPO}}"
-        remoteChart: postgresql
+        chartPath: charts/postgres
         namespace: "{{.NAMESPACE}}"
         createNamespace: true
-        valuesFiles:
-          - values/postgresql-values.yaml
         wait: true
 
 ---
@@ -41,12 +38,9 @@ deploy:
   helm:
     releases:
       - name: redis
-        repo: "{{.CHARTS_REPO}}"
-        remoteChart: redis
+        chartPath: charts/redis
         namespace: "{{.NAMESPACE}}"
         createNamespace: true
-        valuesFiles:
-          - values/redis-values.yaml
         wait: true
 
 ---
@@ -55,22 +49,13 @@ kind: Config
 metadata:
   name: kafka
 
-manifests:
-  rawYaml:
-    - manifests/kafka-cluster.yaml
-
 deploy:
-  kubectl:
-    defaultNamespace: "{{.NAMESPACE}}"
   helm:
     releases:
-      - name: strimzi
-        repo: "{{.CHARTS_REPO}}"
-        remoteChart: strimzi-kafka-operator
+      - name: kafka
+        chartPath: charts/kafka
         namespace: "{{.NAMESPACE}}"
         createNamespace: true
-        valuesFiles:
-          - values/strimzi-values.yaml
         wait: true
 
 ---

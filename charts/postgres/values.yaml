@@ -1,0 +1,105 @@
+# PostgreSQL local development values
+# Bitnami PostgreSQL 18.5.1
+# Values are nested under the dependency name (postgresql).
+
+postgresql:
+  architecture: standalone
+
+  auth:
+    postgresPassword: "mathtrail"
+    username: "mathtrail"
+    password: "mathtrail"
+    database: "mathtrail"
+
+  primary:
+    persistence:
+      enabled: true
+      size: 1Gi
+    resourcesPreset: "nano"
+    initdb:
+      scripts:
+        create-identity-dbs.sql: |
+          CREATE DATABASE kratos;
+          CREATE DATABASE hydra;
+          CREATE DATABASE keto;
+          CREATE DATABASE mentor;
+          CREATE DATABASE profile;
+          GRANT ALL PRIVILEGES ON DATABASE kratos TO mathtrail;
+          GRANT ALL PRIVILEGES ON DATABASE hydra TO mathtrail;
+          GRANT ALL PRIVILEGES ON DATABASE keto TO mathtrail;
+          GRANT ALL PRIVILEGES ON DATABASE mentor TO mathtrail;
+          GRANT ALL PRIVILEGES ON DATABASE profile TO mathtrail;
+        create-pgbouncer-auth.sql: |
+          -- Create pgbouncer auth user (idempotent)
+          DO $$
+          BEGIN
+            IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'pgbouncer_auth') THEN
+              CREATE ROLE pgbouncer_auth WITH LOGIN PASSWORD 'pgbouncer_auth_pass';
+            END IF;
+          END $$;
+
+          -- Create SECURITY DEFINER lookup function in each database that pgbouncer routes to.
+          -- This allows pgbouncer_auth to authenticate users without SUPERUSER privileges.
+          \connect mathtrail
+          CREATE OR REPLACE FUNCTION public.lookup_user(p_user TEXT)
+            RETURNS TABLE(usename name, passwd text)
+            LANGUAGE sql SECURITY DEFINER AS
+            $$ SELECT usename, passwd FROM pg_shadow WHERE usename = p_user; $$;
+          GRANT EXECUTE ON FUNCTION public.lookup_user(TEXT) TO pgbouncer_auth;
+
+          \connect kratos
+          CREATE OR REPLACE FUNCTION public.lookup_user(p_user TEXT)
+            RETURNS TABLE(usename name, passwd text)
+            LANGUAGE sql SECURITY DEFINER AS
+            $$ SELECT usename, passwd FROM pg_shadow WHERE usename = p_user; $$;
+          GRANT EXECUTE ON FUNCTION public.lookup_user(TEXT) TO pgbouncer_auth;
+
+          \connect hydra
+          CREATE OR REPLACE FUNCTION public.lookup_user(p_user TEXT)
+            RETURNS TABLE(usename name, passwd text)
+            LANGUAGE sql SECURITY DEFINER AS
+            $$ SELECT usename, passwd FROM pg_shadow WHERE usename = p_user; $$;
+          GRANT EXECUTE ON FUNCTION public.lookup_user(TEXT) TO pgbouncer_auth;
+
+          \connect keto
+          CREATE OR REPLACE FUNCTION public.lookup_user(p_user TEXT)
+            RETURNS TABLE(usename name, passwd text)
+            LANGUAGE sql SECURITY DEFINER AS
+            $$ SELECT usename, passwd FROM pg_shadow WHERE usename = p_user; $$;
+          GRANT EXECUTE ON FUNCTION public.lookup_user(TEXT) TO pgbouncer_auth;
+
+          \connect mentor
+          CREATE OR REPLACE FUNCTION public.lookup_user(p_user TEXT)
+            RETURNS TABLE(usename name, passwd text)
+            LANGUAGE sql SECURITY DEFINER AS
+            $$ SELECT usename, passwd FROM pg_shadow WHERE usename = p_user; $$;
+          GRANT EXECUTE ON FUNCTION public.lookup_user(TEXT) TO pgbouncer_auth;
+
+          \connect profile
+          CREATE OR REPLACE FUNCTION public.lookup_user(p_user TEXT)
+            RETURNS TABLE(usename name, passwd text)
+            LANGUAGE sql SECURITY DEFINER AS
+            $$ SELECT usename, passwd FROM pg_shadow WHERE usename = p_user; $$;
+          GRANT EXECUTE ON FUNCTION public.lookup_user(TEXT) TO pgbouncer_auth;
+        vault-default-privileges.sql: |
+          -- Vault Database Secrets Engine creates short-lived users.
+          -- Pre-grant default privileges so dynamic users automatically get access to
+          -- tables and sequences created by future migrations (not just existing ones).
+          -- Applied to all databases that have Vault dynamic roles.
+          \connect mentor
+          ALTER DEFAULT PRIVILEGES IN SCHEMA public
+            GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO PUBLIC;
+          ALTER DEFAULT PRIVILEGES IN SCHEMA public
+            GRANT USAGE, SELECT ON SEQUENCES TO PUBLIC;
+
+          \connect profile
+          ALTER DEFAULT PRIVILEGES IN SCHEMA public
+            GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO PUBLIC;
+          ALTER DEFAULT PRIVILEGES IN SCHEMA public
+            GRANT USAGE, SELECT ON SEQUENCES TO PUBLIC;
+
+          \connect mathtrail
+          ALTER DEFAULT PRIVILEGES IN SCHEMA public
+            GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO PUBLIC;
+          ALTER DEFAULT PRIVILEGES IN SCHEMA public
+            GRANT USAGE, SELECT ON SEQUENCES TO PUBLIC;
