@@ -8,6 +8,7 @@
 # Destination (Vault KV v2, path: local/postgres):
 #   postgres-password — postgres superuser (used by Vault DB engine rootCredentials)
 #   password          — mathtrail app user (used by Kratos/Hydra for future migration)
+{{- if .Values.vaultPush.enabled }}
 apiVersion: external-secrets.io/v1alpha1
 kind: PushSecret
 metadata:
@@ -32,3 +33,4 @@ spec:
         remoteRef:
           remoteKey: local/postgres
           property: password
+{{- end }}

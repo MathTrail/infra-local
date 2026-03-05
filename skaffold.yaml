@@ -26,6 +26,8 @@ deploy:
         namespace: "{{.NAMESPACE}}"
         createNamespace: true
         wait: true
+        setValues:
+          vaultPush.enabled: "true"
 
 ---
 apiVersion: skaffold/v4beta13
