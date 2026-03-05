@@ -3,6 +3,7 @@
 # Values are nested under the dependency name (postgresql).
 
 vaultPush:
+  enabled: false
   secretStore:
     name: vault-kv-backend
     kind: ClusterSecretStore
